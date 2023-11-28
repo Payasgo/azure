@@ -1,0 +1,9 @@
+{
+	"name": "azurepiprlinemanagement",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "de1ddf29-5589-4ec6-ab5b-d42910d8d900",
+		"tenantId": "2db0e13c-89f2-4a67-88ce-504c6fb70607"
+	}
+}
