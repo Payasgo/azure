@@ -5,23 +5,33 @@
 			"referenceName": "LS_SqlServer",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"AllDatabase": {
-					"value": "@dataset().database",
+				"ServerName": {
+					"value": "@dataset().ServerName",
+					"type": "Expression"
+				},
+				"DBNames": {
+					"value": "@dataset().DBNames",
+					"type": "Expression"
+				},
+				"Tables": {
+					"value": "@dataset().Tables",
 					"type": "Expression"
 				}
 			}
 		},
 		"parameters": {
-			"database": {
+			"ServerName": {
+				"type": "string"
+			},
+			"DBNames": {
+				"type": "string"
+			},
+			"Tables": {
 				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
-		"schema": [],
-		"typeProperties": {
-			"schema": "dbo",
-			"table": "credit_card_fraud"
-		}
+		"schema": []
 	}
 }
