@@ -117,14 +117,28 @@
 					"referenceName": "LS_SqlServer",
 					"type": "LinkedServiceReference",
 					"parameters": {
+						"ServerName": {
+							"value": "@dataset().ServerName",
+							"type": "Expression"
+						},
 						"DBNames": {
-							"value": "@dataset().database",
+							"value": "@dataset().DBNames",
+							"type": "Expression"
+						},
+						"Tables": {
+							"value": "@dataset().Tables",
 							"type": "Expression"
 						}
 					}
 				},
 				"parameters": {
-					"database": {
+					"ServerName": {
+						"type": "string"
+					},
+					"DBNames": {
+						"type": "string"
+					},
+					"Tables": {
 						"type": "string"
 					}
 				},
