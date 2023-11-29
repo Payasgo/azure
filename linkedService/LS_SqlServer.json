@@ -1,0 +1,27 @@
+{
+	"name": "LS_SqlServer",
+	"properties": {
+		"parameters": {
+			"AllDatabase": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Data Source=KRANTHI;Initial Catalog=@{linkedService().AllDatabase};User ID=azure",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AzureKeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "password"
+			}
+		},
+		"connectVia": {
+			"referenceName": "SHIRintegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
