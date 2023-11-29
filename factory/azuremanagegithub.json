@@ -1,0 +1,9 @@
+{
+	"name": "azuremanagegithub",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b82d0fd2-eadb-4e29-a950-cf2b5aa6a8ad",
+		"tenantId": "2db0e13c-89f2-4a67-88ce-504c6fb70607"
+	}
+}
