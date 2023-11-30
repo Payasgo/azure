@@ -26,7 +26,7 @@
 					"value": "@concat(dataset().SchemaName, '/', dataset().TableName)",
 					"type": "Expression"
 				},
-				"fileSystem": "output"
+				"fileSystem": "input"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
