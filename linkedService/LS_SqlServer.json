@@ -7,6 +7,9 @@
 			},
 			"DBNames": {
 				"type": "string"
+			},
+			"Tables": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
