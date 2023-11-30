@@ -25,18 +25,9 @@
 						"referenceName": "DS_SqlServerTable",
 						"type": "DatasetReference",
 						"parameters": {
-							"ServerName": {
-								"value": "@pipeline().parameters.ServerName",
-								"type": "Expression"
-							},
-							"DBNames": {
-								"value": "@pipeline().parameters.DBNames",
-								"type": "Expression"
-							},
-							"Tables": {
-								"value": "@pipeline().parameters.Tables",
-								"type": "Expression"
-							}
+							"sqlserver": "KRANTHI",
+							"DBNames": "EMPLOYEE",
+							"Tables": "EMP"
 						}
 					},
 					"firstRowOnly": false
@@ -109,18 +100,9 @@
 									"referenceName": "DS_SqlServerTable",
 									"type": "DatasetReference",
 									"parameters": {
-										"ServerName": {
-											"value": "@item().serverName",
-											"type": "Expression"
-										},
-										"DBNames": {
-											"value": "@item().DBNames",
-											"type": "Expression"
-										},
-										"Tables": {
-											"value": "@item().Tables",
-											"type": "Expression"
-										}
+										"sqlserver": "KRANTHI",
+										"DBNames": "EMPLOYEE",
+										"Tables": "EMP"
 									}
 								}
 							],

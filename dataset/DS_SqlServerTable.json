@@ -5,29 +5,37 @@
 			"referenceName": "LS_SqlServer",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"serverName": {
-					"value": "@dataset().ServerName",
+				"SqlServer": {
+					"value": "@dataset().sqlserver",
 					"type": "Expression"
 				},
 				"DBNames": {
 					"value": "@dataset().DBNames",
 					"type": "Expression"
+				},
+				"Tables": {
+					"value": "@dataset().Tables",
+					"type": "Expression"
 				}
 			}
 		},
 		"parameters": {
-			"ServerName": {
-				"type": "string"
+			"sqlserver": {
+				"type": "String"
 			},
 			"DBNames": {
-				"type": "string"
+				"type": "String"
 			},
 			"Tables": {
-				"type": "string"
+				"type": "String"
 			}
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMP"
+		}
 	}
 }
