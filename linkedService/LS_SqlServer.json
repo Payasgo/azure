@@ -1,0 +1,30 @@
+{
+	"name": "LS_SqlServer",
+	"properties": {
+		"parameters": {
+			"serverName": {
+				"type": "String"
+			},
+			"DBNames": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Data Source=@{linkedService().serverName};Initial Catalog=@{linkedService().DBNames};User ID=azure",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AzureKeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "password"
+			}
+		},
+		"connectVia": {
+			"referenceName": "SELFHOSTintegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
