@@ -1,0 +1,9 @@
+{
+	"name": "adfazurepipemanagement",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b1f787f5-f7fc-4d73-b2ef-56ea4fb5410a",
+		"tenantId": "2db0e13c-89f2-4a67-88ce-504c6fb70607"
+	}
+}
