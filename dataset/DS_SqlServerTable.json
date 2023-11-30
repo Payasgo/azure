@@ -1,0 +1,33 @@
+{
+	"name": "DS_SqlServerTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"serverName": {
+					"value": "@dataset().ServerName",
+					"type": "Expression"
+				},
+				"DBNames": {
+					"value": "@dataset().DBNames",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"ServerName": {
+				"type": "string"
+			},
+			"DBNames": {
+				"type": "string"
+			},
+			"Tables": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
