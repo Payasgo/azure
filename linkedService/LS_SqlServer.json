@@ -2,17 +2,17 @@
 	"name": "LS_SqlServer",
 	"properties": {
 		"parameters": {
-			"serverName": {
-				"type": "String"
+			"SqlServer": {
+				"type": "string"
 			},
 			"DBNames": {
-				"type": "String"
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "Integrated Security=False;Data Source=@{linkedService().serverName};Initial Catalog=@{linkedService().DBNames};User ID=azure",
+			"connectionString": "Integrated Security=False;Data Source=@{linkedService().SqlServer};Initial Catalog=@{linkedService().DBNames};User ID=azure",
 			"password": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
