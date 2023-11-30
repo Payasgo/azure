@@ -1,0 +1,62 @@
+{
+	"name": "sqlserver_blob",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_ALL_Table",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT s.name AS SchemaName,\nt.name AS TableName\nFROM sys.tables t\nINNER JOIN sys.schemas s\nON t.Schema_id =s.Schema_id\nWHERE s.name = 'dbo'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_SqlServerTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"serverName": {
+								"value": "@pipeline().parameters.ServerName",
+								"type": "Expression"
+							},
+							"DBNames": {
+								"value": "@pipeline().parameters.DBNames",
+								"type": "Expression"
+							},
+							"Tables": {
+								"value": "@pipeline().parameters.Tables",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"ServerName": {
+				"type": "string"
+			},
+			"DBNames": {
+				"type": "string"
+			},
+			"Tables": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "SqlServer_blob_Snowflake"
+		},
+		"annotations": []
+	}
+}
