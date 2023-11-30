@@ -1,0 +1,9 @@
+{
+	"name": "AdfServerManager",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "68138be8-bae6-4870-b0d3-99ef068f0403",
+		"tenantId": "2db0e13c-89f2-4a67-88ce-504c6fb70607"
+	}
+}
