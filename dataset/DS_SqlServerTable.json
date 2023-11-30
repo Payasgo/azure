@@ -20,7 +20,7 @@
 			}
 		},
 		"parameters": {
-			"serverName": {
+			"ServerName": {
 				"type": "string"
 			},
 			"DBNames": {
@@ -32,10 +32,6 @@
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
-		"schema": [],
-		"typeProperties": {
-			"schema": "dbo",
-			"table": "empinfo"
-		}
+		"schema": []
 	}
 }
