@@ -1,0 +1,130 @@
+{
+	"name": "sqlserver_adls_fullload",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT s.name AS SchemaName,\n       t.name AS TableName\nFROM sys.tables AS t\nINNER JOIN sys.schemas AS s ON s.schema_id = t.schema_id \nWHERE s.name = 'dbo';",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Ds_source_SqlServerTable",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy data",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT * FROM ', item().SchemaName, '.', item().TableName)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "LS_linkedService",
+										"type": "LinkedServiceReference"
+									},
+									"path": "raw"
+								},
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Ds_fromlook_SqlServerTable",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Ds_SINK_Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"SchemaName": {
+											"value": "@item().SchemaName",
+											"type": "Expression"
+										},
+										"TableName": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "SqlServer_ADLS"
+		},
+		"annotations": []
+	}
+}
