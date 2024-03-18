@@ -1,0 +1,16 @@
+{
+	"name": "DS_SINK_AzureSqlTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Ls_AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "alltable"
+		}
+	}
+}
