@@ -1,0 +1,427 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name"
+		},
+		"ls_SqlServer": {
+			"type": "string"
+		},
+		"Ls_AzureSqlDatabase": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_Sqlserver_AzureSql')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT s.name AS SchemaName,\n       t.name AS TableName\nFROM sys.tables AS t\nINNER JOIN sys.schemas AS s ON s.schema_id = t.schema_id \nWHERE s.name = 'dbo';",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Ds_source_SqlServerTable",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy data",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT * FROM ', item().SchemaName, '.', item().TableName)",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Ds_fromlook_SqlServerTable",
+											"type": "DatasetReference"
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DS_SINK_AzureSqlTable",
+											"type": "DatasetReference",
+											"parameters": {
+												"SchemaName": {
+													"value": "@item().SchemaName",
+													"type": "Expression"
+												},
+												"TableName": {
+													"value": "@item().TableName",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"folder": {
+					"name": "sqlserver_azuresql"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Ds_source_SqlServerTable')]",
+				"[concat(variables('factoryId'), '/datasets/Ds_fromlook_SqlServerTable')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SINK_AzureSqlTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ds_source_SqlServerTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('ls_SqlServer')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ds_fromlook_SqlServerTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('ls_SqlServer')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SINK_AzureSqlTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('Ls_AzureSqlDatabase')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SchemaName": {
+						"type": "string"
+					},
+					"TableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "object_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "principal_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "schema_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "parent_object_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "type",
+						"type": "char"
+					},
+					{
+						"name": "type_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "create_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "modify_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "is_ms_shipped",
+						"type": "bit"
+					},
+					{
+						"name": "is_published",
+						"type": "bit"
+					},
+					{
+						"name": "is_schema_published",
+						"type": "bit"
+					},
+					{
+						"name": "lob_data_space_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "filestream_data_space_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "max_column_id_used",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "lock_on_bulk_load",
+						"type": "bit"
+					},
+					{
+						"name": "uses_ansi_nulls",
+						"type": "bit"
+					},
+					{
+						"name": "is_replicated",
+						"type": "bit"
+					},
+					{
+						"name": "has_replication_filter",
+						"type": "bit"
+					},
+					{
+						"name": "is_merge_published",
+						"type": "bit"
+					},
+					{
+						"name": "is_sync_tran_subscribed",
+						"type": "bit"
+					},
+					{
+						"name": "has_unchecked_assembly_data",
+						"type": "bit"
+					},
+					{
+						"name": "text_in_row_limit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "large_value_types_out_of_row",
+						"type": "bit"
+					},
+					{
+						"name": "is_tracked_by_cdc",
+						"type": "bit"
+					},
+					{
+						"name": "lock_escalation",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "lock_escalation_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "is_filetable",
+						"type": "bit"
+					},
+					{
+						"name": "is_memory_optimized",
+						"type": "bit"
+					},
+					{
+						"name": "durability",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "durability_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "temporal_type",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "temporal_type_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "history_table_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "is_remote_data_archive_enabled",
+						"type": "bit"
+					},
+					{
+						"name": "is_external",
+						"type": "bit"
+					},
+					{
+						"name": "history_retention_period",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "history_retention_period_unit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "history_retention_period_unit_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "is_node",
+						"type": "bit"
+					},
+					{
+						"name": "is_edge",
+						"type": "bit"
+					},
+					{
+						"name": "data_retention_period",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "data_retention_period_unit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "data_retention_period_unit_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ledger_type",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "ledger_type_desc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ledger_view_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "is_dropped_ledger_table",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SchemaName",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
