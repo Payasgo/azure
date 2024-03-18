@@ -1,0 +1,9 @@
+{
+	"name": "archanaADF2",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "d4d6a6e6-ea14-4f36-94b3-93b8b7cfaa6f",
+		"tenantId": "ca3ebbc4-c243-4516-ad38-6fbbfa4a8594"
+	}
+}
