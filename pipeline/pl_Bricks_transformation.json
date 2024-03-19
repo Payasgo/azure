@@ -75,7 +75,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/databrickssp/adf_invoke",
+					"notebookPath": "/Workspace/databrickssp/adf_invoke",
 					"baseParameters": {
 						"input_payload": {
 							"value": "@variables('config_load')",
