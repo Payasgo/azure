@@ -1,0 +1,87 @@
+{
+	"name": "Pl_Script",
+	"properties": {
+		"activities": [
+			{
+				"name": "Stored procedure",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[SP_adfpipeline]",
+					"storedProcedureParameters": {
+						"data_factory": {
+							"value": {
+								"value": "@pipeline().parameters.data_factory",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"job_return": {
+							"value": {
+								"value": "@variables('Job_return')",
+								"type": "Expression"
+							},
+							"type": "Boolean"
+						},
+						"load_group": {
+							"value": {
+								"value": "@pipeline().parameters.load_group",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"load_sink": {
+							"value": {
+								"value": "@pipeline().parameters.load_sink",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"load_type": {
+							"value": {
+								"value": "@pipeline().parameters.load_type",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "Ls_AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"load_group": {
+				"type": "string"
+			},
+			"load_sink": {
+				"type": "string"
+			},
+			"load_type": {
+				"type": "string"
+			},
+			"data_factory": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"Job_return": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "Script"
+		},
+		"annotations": []
+	}
+}
