@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "archive.zip",
+				"fileName": "Coaches.csv",
 				"fileSystem": "input"
 			},
 			"columnDelimiter": ",",
