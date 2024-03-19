@@ -1,5 +1,13 @@
 {
 	"name": "archanaADF2",
+	"properties": {
+		"globalParameters": {
+			"cluster_id": {
+				"type": "string",
+				"value": "0318-145013-3ebmdnzg"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
