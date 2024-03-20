@@ -28,6 +28,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Pl_alerts",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
