@@ -1,0 +1,33 @@
+{
+	"name": "pl_Fail",
+	"properties": {
+		"activities": [
+			{
+				"name": "Fail1",
+				"type": "Fail",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "PipelineFailure",
+					"errorCode": "1001"
+				}
+			},
+			{
+				"name": "send message",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Webactivity"
+		},
+		"annotations": []
+	}
+}
