@@ -32,7 +32,17 @@
 						"referenceName": "Pl_alerts",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"pipename": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"message": {
+							"value": "@activity('Fail1').output.message",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
