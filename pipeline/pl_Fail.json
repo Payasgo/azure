@@ -19,7 +19,7 @@
 					{
 						"activity": "Fail1",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
@@ -32,7 +32,7 @@
 						"referenceName": "pl_alert",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true,
+					"waitOnCompletion": false,
 					"parameters": {
 						"pipelinename": {
 							"value": "@pipeline().Pipeline",
